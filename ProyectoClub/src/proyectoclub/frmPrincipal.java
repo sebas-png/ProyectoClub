@@ -18,6 +18,22 @@ public class frmPrincipal extends javax.swing.JFrame {
     public frmPrincipal() {
         initComponents();
     }
+    private void llenarTablaAlIniciar() {
+    javax.swing.table.DefaultTableModel modeloTabla = (javax.swing.table.DefaultTableModel) tblSocios.getModel();
+    modeloTabla.setRowCount(0); // Limpiamos cualquier fila residual
+
+    // Recorremos los socios que el controlador ya cargó en su ArrayList
+    for (Socio s : controladorSocio.getListaSocios()) {
+        modeloTabla.addRow(new Object[]{
+            s.getIdSocio(),
+            s.getNombre(),
+            s.getMembresia(),
+            s.getCosto(),
+            s.getFechaIngreso(),
+            s.isEstaActivo()
+        });
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,8 +78,10 @@ public class frmPrincipal extends javax.swing.JFrame {
         btnEliminar.setText("Eliminar");
 
         btnImportarCSV.setText("Importar CSV");
+        btnImportarCSV.addActionListener(this::btnImportarCSVActionPerformed);
 
         btnGenerarPDF.setText("Generar Reporte PDF");
+        btnGenerarPDF.addActionListener(this::btnGenerarPDFActionPerformed);
 
         chkActivo.setText("Estado Activo");
 
@@ -202,8 +220,54 @@ public class frmPrincipal extends javax.swing.JFrame {
         // Aquí atrapamos el error si meten letras en ID o Costo sin que el programa muera
         javax.swing.JOptionPane.showMessageDialog(this, "Error de formato: El ID debe ser entero y el Costo debe ser un número decimal.", "Error de Validación", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
-}
+
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnImportarCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarCSVActionPerformed
+         // Creamos el selector de archivos
+    javax.swing.JFileChooser selectorArchivos = new javax.swing.JFileChooser();
+    
+    // Filtramos para que solo muestre archivos con extensión .csv
+    javax.swing.filechooser.FileNameExtensionFilter filtro = new javax.swing.filechooser.FileNameExtensionFilter("Archivos CSV (*.csv)", "csv");
+    selectorArchivos.setFileFilter(filtro);
+    
+    // Mostramos la ventana emergente para elegir el archivo
+    int resultado = selectorArchivos.showOpenDialog(this);
+    
+    if (resultado == javax.swing.JFileChooser.APPROVE_OPTION) {
+        java.io.File archivoSeleccionado = selectorArchivos.getSelectedFile();
+        
+        try {
+            // Ejecutamos la importación en el controlador
+            controladorSocio.importarDesdeCSV(archivoSeleccionado);
+            
+            // Refrescamos la JTable visual para mostrar los nuevos socios importados
+            llenarTablaAlIniciar(); 
+            
+            javax.swing.JOptionPane.showMessageDialog(this, "¡Carga masiva completada con éxito!");
+            
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al procesar el archivo CSV: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    }//GEN-LAST:event_btnImportarCSVActionPerformed
+
+    private void btnGenerarPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarPDFActionPerformed
+        try {
+        String archivo = "Reporte_GymFlow.pdf";
+        controladorSocio.generarReportePDF(archivo);
+        
+        javax.swing.JOptionPane.showMessageDialog(this, "¡PDF creado con éxito en la raíz del proyecto!");
+        
+        // Abre el documento de manera automática en Windows
+        java.io.File file = new java.io.File(archivo);
+        if (java.awt.Desktop.isDesktopSupported()) {
+            java.awt.Desktop.getDesktop().open(file);
+        }
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Error al procesar PDF: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnGenerarPDFActionPerformed
 
     /**
      * @param args the command line arguments
@@ -246,3 +310,4 @@ public class frmPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 
+}
