@@ -132,12 +132,23 @@ public class ControladorSocio {
         tabla.addCell(new com.itextpdf.text.Phrase(s.getMembresia(), fuenteCuerpo));
         tabla.addCell(new com.itextpdf.text.Phrase("$" + s.getCosto(), fuenteCuerpo)); // Ajusta a getCost() si no lo cambiaste
         tabla.addCell(new com.itextpdf.text.Phrase(s.getFechaIngreso().toString(), fuenteCuerpo));
+        tabla.addCell(new com.itextpdf.text.Phrase(s.isActivo() ? "Activo" : "Inactivo", fuenteCuerpo));
+    }
+     
+    {
+     
         
     }
-    
     documento.add(tabla);
     documento.close();
-}
+    }
+    {
+    
+        
+    }
+    boolean eliminarSocio(int idSocio) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
   
 

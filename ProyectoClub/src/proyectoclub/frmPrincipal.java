@@ -74,8 +74,10 @@ public class frmPrincipal extends javax.swing.JFrame {
         btnGuardar.addActionListener(this::btnGuardarActionPerformed);
 
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(this::btnActualizarActionPerformed);
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(this::btnEliminarActionPerformed);
 
         btnImportarCSV.setText("Importar CSV");
         btnImportarCSV.addActionListener(this::btnImportarCSVActionPerformed);
@@ -268,6 +270,33 @@ public class frmPrincipal extends javax.swing.JFrame {
         javax.swing.JOptionPane.showMessageDialog(this, "Error al procesar PDF: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_btnGenerarPDFActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int filaSeleccionada = tblSocios.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Por favor, selecciona un socio de la tabla para eliminar.");
+        return;
+    }
+    
+    // Obtenemos el ID de la primera columna de la fila seleccionada
+    int idSocio = (int) tblSocios.getValueAt(filaSeleccionada, 0);
+    
+    int confirmar = javax.swing.JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar al socio con ID " + idSocio + "?", "Confirmar", javax.swing.JOptionPane.YES_NO_OPTION);
+    
+    if (confirmar == javax.swing.JOptionPane.YES_OPTION) {
+        if (controladorSocio.eliminarSocio(idSocio)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Socio eliminado correctamente.");
+            llenarTablaAlIniciar(); // Refrescamos la tabla visual
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: No se pudo eliminar el socio.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        
+    }//GEN-LAST:event_btnActualizarActionPerformed
 
     /**
      * @param args the command line arguments
